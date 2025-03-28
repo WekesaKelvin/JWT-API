@@ -26,8 +26,15 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private PasswordResetTokenRepository tokenRepository;
 
+
     @Autowired
     private EmailService emailService;
+
+    public void setEmailService(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+
 
     @Override
     public UserDTO createUser(SignupDTO signupDTO) {
