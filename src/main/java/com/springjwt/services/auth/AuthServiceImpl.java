@@ -26,15 +26,22 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private PasswordResetTokenRepository tokenRepository;
 
+
     @Autowired
     private EmailService emailService;
+
+    public void setEmailService(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+
 
     @Override
     public UserDTO createUser(SignupDTO signupDTO) {
         User user = new User();
         user.setName(signupDTO.getName());
         user.setEmail(signupDTO.getEmail());
-        user.setPassword(new BCryptPasswordEncoder().encode(signupDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(signupDTO.getPassword()));
         User createdUser = userRepository.save(user);
         UserDTO userDTO = new UserDTO();
         userDTO.setId(createdUser.getId());
