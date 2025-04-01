@@ -10,7 +10,9 @@ com/springjwt/entities/User.class
 com/springjwt/controllers/AuthenticationController.class
 com/springjwt/SpringJwtApplication.class
 com/springjwt/repositories/UserRepository.class
+com/springjwt/services/Token/TokenBlacklistService.class
 com/springjwt/entities/Product.class
+com/springjwt/services/Token/TokenBlacklistServiceImpl.class
 com/springjwt/dto/AuthenticationDTO.class
 com/springjwt/controllers/SignupController.class
 com/springjwt/controllers/HelloController.class

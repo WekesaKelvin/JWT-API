@@ -30,7 +30,7 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/authenticate", "/sign-up", "/forgot-password", "/reset-password").permitAll()
+                .requestMatchers("/authenticate", "/sign-up", "/forgot-password", "/reset-password", "/logout").permitAll()
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/**")
                 .authenticated().and()
@@ -38,6 +38,8 @@ public class WebSecurityConfiguration {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .logout()
+                .disable()
                 .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
