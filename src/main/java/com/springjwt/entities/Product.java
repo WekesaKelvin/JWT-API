@@ -18,6 +18,10 @@ public class Product {
     @Column(nullable = false)
     private Double price;
 
+    @ManyToOne
+    @JoinColumn(name = "created_by", nullable = false)
+    private User createdBy;
+
     public Product() {}
 
     public Long getId() {

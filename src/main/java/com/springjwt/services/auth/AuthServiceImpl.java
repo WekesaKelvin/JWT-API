@@ -7,6 +7,8 @@ import com.springjwt.entities.User;
 import com.springjwt.repositories.PasswordResetTokenRepository;
 import com.springjwt.repositories.UserRepository;
 import com.springjwt.services.Email.EmailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +18,8 @@ import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+    private static Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -42,6 +46,8 @@ public class AuthServiceImpl implements AuthService {
         user.setName(signupDTO.getName());
         user.setEmail(signupDTO.getEmail());
         user.setPassword(passwordEncoder.encode(signupDTO.getPassword()));
+        String role = signupDTO.getRole() != null ? signupDTO.getRole() : "ROLE_USER";
+        user.setRole(role);
         User createdUser = userRepository.save(user);
         UserDTO userDTO = new UserDTO();
         userDTO.setId(createdUser.getId());
