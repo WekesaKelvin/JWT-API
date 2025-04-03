@@ -1,5 +1,6 @@
 package com.springjwt.util;
 
+import com.springjwt.services.jwt.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,6 +24,9 @@ public class JwtUtil {
     public static final String SECRET = "9n2!9H@1cR#V9&fH1mLz9qU@7vBz!wKm";
 
     @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
     private TokenBlacklistService tokenBlacklistService;
 
     public String extractUsername(String token) {
@@ -31,6 +35,10 @@ public class JwtUtil {
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -74,7 +82,9 @@ public class JwtUtil {
     }
 
     public String generateToken(String userName) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
         Map<String, Object> claims = new HashMap<>();
+        claims.put("role", userDetails.getAuthorities().iterator().next().getAuthority()); // Add role to claims
         return createToken(claims, userName);
     }
 
