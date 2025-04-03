@@ -20,6 +20,7 @@ com/springjwt/controllers/ForgotPassController.class
 com/springjwt/dto/SignupDTO.class
 com/springjwt/repositories/ProductRepository.class
 com/springjwt/services/auth/AuthServiceImpl.class
+com/springjwt/configuration/AdminInitializer.class
 com/springjwt/util/JwtUtil.class
 com/springjwt/dto/UserDTO.class
 com/springjwt/services/Product/ProductService.class

@@ -1,6 +1,7 @@
 /Users/guantai.muthomi/Downloads/JWT-API/src/main/java/com/springjwt/dto/HelloResponse.java
 /Users/guantai.muthomi/Downloads/JWT-API/src/main/java/com/springjwt/services/Email/EmailService.java
 /Users/guantai.muthomi/Downloads/JWT-API/src/main/java/com/springjwt/dto/SignupDTO.java
+/Users/guantai.muthomi/Downloads/JWT-API/src/main/java/com/springjwt/configuration/AdminInitializer.java
 /Users/guantai.muthomi/Downloads/JWT-API/src/main/java/com/springjwt/services/Token/TokenBlacklistService.java
 /Users/guantai.muthomi/Downloads/JWT-API/src/main/java/com/springjwt/filters/JwtRequestFilter.java
 /Users/guantai.muthomi/Downloads/JWT-API/src/main/java/com/springjwt/controllers/SignupController.java

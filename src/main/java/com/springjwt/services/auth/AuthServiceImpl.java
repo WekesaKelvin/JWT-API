@@ -19,8 +19,6 @@ import java.util.UUID;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private static Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
-
     @Autowired
     private UserRepository userRepository;
 
@@ -37,8 +35,6 @@ public class AuthServiceImpl implements AuthService {
     public void setEmailService(EmailService emailService) {
         this.emailService = emailService;
     }
-
-
 
     @Override
     public UserDTO createUser(SignupDTO signupDTO) {

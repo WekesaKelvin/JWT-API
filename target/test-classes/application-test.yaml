@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  mail:
+    host: localhost
+    port: 2525
+    protocol: smtp
+    username: test
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+        transport:
+          protocol: smtp
+        debug: true
+logging:
+  level:
+    org.springframework.mail: DEBUG
+    jakarta.mail: DEBUG

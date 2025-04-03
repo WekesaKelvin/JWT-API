@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    active: dev  # Default profile
+
+---
+spring:
+  profiles: dev
+  activemq:
+    broker-url: vm://localhost  # Embedded in-memory broker
+    pool:
+      enabled: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/webapp
+    username: root
+    password: Clearme@1824
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: bruceydev@gmail.com
+    password: odanegyqawpgqguk
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
