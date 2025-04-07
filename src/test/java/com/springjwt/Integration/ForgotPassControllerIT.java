@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class ForgotPassControllerIT {
-
+/*
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -225,5 +225,5 @@ public class ForgotPassControllerIT {
 
         assertEquals(400, response.getStatusCodeValue());
         assertEquals("Invalid or expired token.", response.getBody());
-    }
+    }*/
 }

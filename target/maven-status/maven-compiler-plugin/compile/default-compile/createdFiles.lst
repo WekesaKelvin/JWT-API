@@ -1,14 +1,17 @@
 com/springjwt/dto/HelloResponse.class
+com/springjwt/repositories/MessageLogRepository.class
 com/springjwt/dto/AuthenticationResponse.class
 com/springjwt/configuration/SimpleCorsFilter.class
 com/springjwt/services/Email/EmailService.class
 com/springjwt/services/jwt/UserDetailsServiceImpl.class
+com/springjwt/configuration/JmsConfiguration.class
 com/springjwt/configuration/WebSecurityConfiguration.class
 com/springjwt/entities/PasswordResetToken.class
 com/springjwt/filters/JwtRequestFilter.class
 com/springjwt/entities/User.class
 com/springjwt/controllers/AuthenticationController.class
 com/springjwt/SpringJwtApplication.class
+com/springjwt/entities/MessageLog.class
 com/springjwt/repositories/UserRepository.class
 com/springjwt/services/Token/TokenBlacklistService.class
 com/springjwt/entities/Product.class
@@ -28,6 +31,8 @@ com/springjwt/services/auth/AuthService.class
 com/springjwt/services/Email/EmailServiceImpl.class
 com/springjwt/repositories/PasswordResetTokenRepository.class
 com/springjwt/controllers/ProductController.class
+com/springjwt/messaging/ProductMessageConsumer.class
 com/springjwt/services/Product/ProductServiceImpl.class
 com/springjwt/dto/ProductDTO.class
 com/springjwt/configuration/JwtAuthenticationEntryPoint.class
+com/springjwt/services/Messages/ProductMessageListener.class
