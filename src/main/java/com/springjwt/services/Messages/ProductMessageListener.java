@@ -1,16 +1,11 @@
 package com.springjwt.services.Messages;
 
-
-import com.springjwt.entities.MessageLog;
-import com.springjwt.repositories.MessageLogRepository;
 import com.springjwt.services.Email.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Component
 public class ProductMessageListener {
@@ -21,35 +16,38 @@ public class ProductMessageListener {
     private EmailService emailService;
 
     @Autowired
-    private MessageLogRepository messageLogRepository;
+    private MessageLogService messageLogService;
 
-    @JmsListener(destination = "product-queue")
+    @JmsListener(destination = "${test.queue.name:product-queue}")
     public void onMessage(String message) {
-        try {
-            logger.info("Received message from product.queue: {}", message);
-            // Save to database
-            MessageLog log = new MessageLog(message, new Date());
-            messageLogRepository.save(log);
-            logger.info("Message saved to database with ID: {}", log.getId());
 
-            // Parse message to extract product name and user email
+            logger.info("Received message from ${test.queue.name:product-queue}: {}", message);
+
+            messageLogService.saveMessageLog(message);
+        try {
             String[] parts = message.split(" by ");
             if (parts.length != 2) {
+                logger.error("Invalid message format: {}", message);
                 throw new IllegalArgumentException("Invalid message format: " + message);
             }
-            String productName = parts[0].replace("Created product: ", "").trim();
-            String userEmail = parts[1].trim();
 
-            // Send email to user
-            String subject = "Product Creation Confirmation";
-            String body = String.format("Dear User,\n\nYour product '%s' has been successfully created.\n\nRegards,\nThe Team", productName);
+            String productPart = parts[0];
+            String userEmail = parts[1];
+            String productName = productPart.replace("Created product: ", "");
+
+            String subject = "Product Created: " + productName;
+            String body = "Dear user, the product " + productName + " has been created successfully.";
             emailService.sendEmail(userEmail, subject, body);
-            logger.info("Email sent to {} for product '{}'", userEmail, productName);
 
+            logger.info("Processed message successfully: {}", message);
+        } catch (IllegalArgumentException e) {
+            logger.error("Failed to process message '{}': {}", message, e.getMessage());
+            throw new RuntimeException("Message processing failed: " + message, e);
         } catch (Exception e) {
-            logger.error("Failed to process message '{}': {}", message, e.getMessage(), e);
-            // Rethrow to trigger JMS redelivery or move to a dead-letter queue
+            logger.error("Unexpected error processing message '{}': {}", message, e.getMessage(), e);
             throw new RuntimeException("Message processing failed: " + message, e);
         }
     }
+
+
 }

@@ -8,20 +8,19 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+  activemq:
+    broker-url: vm://embedded-broker?broker.persistent=false
   mail:
-    host: localhost
-    port: 2525
-    protocol: smtp
-    username: test
-    password: test
+    host: smtp.gmail.com
+    port: 587
+    username: bruceydev@gmail.com
+    password: odanegyqawpgqguk
     properties:
       mail:
         smtp:
-          auth: false
+          auth: true
           starttls:
-            enable: false
-        transport:
-          protocol: smtp
+            enable: true
         debug: true
 logging:
   level:
