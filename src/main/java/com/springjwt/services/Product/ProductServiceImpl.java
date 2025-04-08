@@ -5,7 +5,10 @@ import com.springjwt.entities.Product;
 import com.springjwt.entities.User;
 import com.springjwt.repositories.ProductRepository;
 import com.springjwt.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +18,16 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+
     @Autowired
     private ProductRepository productRepository;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
@@ -29,6 +37,11 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productDTO.getPrice());
         product.setCreatedBy(currentUser);
         Product savedProduct = productRepository.save(product);
+
+        String message = String.format("Created product: %s by %s ", savedProduct.getName(), currentUser.getEmail());
+        jmsTemplate.convertAndSend("product-queue", message);
+        logger.info("Sent message to product-queue: {}", message);
+
         return mapToDTO(savedProduct);
     }
 

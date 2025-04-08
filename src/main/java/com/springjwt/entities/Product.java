@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Entity
 @Table(name = "products")
-@Data
 public class Product {
 
     @Id
@@ -46,5 +45,13 @@ public class Product {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 }
