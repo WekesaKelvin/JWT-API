@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,12 +25,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ProductServiceImplTest {
-
-  /*  @InjectMocks
+    @InjectMocks
     private ProductServiceImpl productService;
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private JmsTemplate jmsTemplate;
 
     @Mock
     private UserRepository userRepository;
@@ -40,26 +43,22 @@ public class ProductServiceImplTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Mock the current user
         mockUser = new User();
         mockUser.setId(1L);
         mockUser.setEmail("test@example.com");
         mockUser.setRole("ROLE_USER");
 
-        // Mock SecurityContextHolder
         Authentication authentication = mock(Authentication.class);
         when(authentication.getName()).thenReturn(mockUser.getEmail());
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        // Mock UserRepository
         when(userRepository.findFirstByEmail(mockUser.getEmail())).thenReturn(mockUser);
     }
 
     @Test
     public void testCreateProduct_Success() {
-        // Arrange
         ProductDTO productDTO = new ProductDTO();
         productDTO.setName("Laptop");
         productDTO.setPrice(999.00);
@@ -72,20 +71,20 @@ public class ProductServiceImplTest {
 
         when(productRepository.save(any(Product.class))).thenReturn(savedProduct);
 
-        // Act
         ProductDTO result = productService.createProduct(productDTO);
 
-        // Assert
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals("Laptop", result.getName());
         assertEquals(999.00, result.getPrice());
         verify(productRepository, times(1)).save(any(Product.class));
+
+        String expectedMessage = String.format("Created product: %s by %s ", savedProduct.getName(), mockUser.getEmail());
+        verify(jmsTemplate, times(1)).convertAndSend(eq("product-queue"), eq(expectedMessage));
     }
 
     @Test
     public void testGetAllProducts_Success() {
-        // Arrange
         Product product1 = new Product();
         product1.setId(1L);
         product1.setName("Laptop");
@@ -101,10 +100,8 @@ public class ProductServiceImplTest {
         List<Product> products = Arrays.asList(product1, product2);
         when(productRepository.findByCreatedBy(mockUser)).thenReturn(products);
 
-        // Act
         List<ProductDTO> result = productService.getAllProducts();
 
-        // Assert
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals("Laptop", result.get(0).getName());
@@ -117,7 +114,6 @@ public class ProductServiceImplTest {
 
     @Test
     public void testGetAllProducts_Admin_Success() {
-        // Arrange
         mockUser.setRole("ROLE_ADMIN"); // Switch to admin role
 
         Product product1 = new Product();
@@ -135,10 +131,8 @@ public class ProductServiceImplTest {
         List<Product> products = Arrays.asList(product1, product2);
         when(productRepository.findAll()).thenReturn(products);
 
-        // Act
         List<ProductDTO> result = productService.getAllProducts();
 
-        // Assert
         assertNotNull(result);
         assertEquals(2, result.size());
         verify(productRepository, times(1)).findAll();
@@ -147,7 +141,6 @@ public class ProductServiceImplTest {
 
     @Test
     public void testGetProductById_Success() {
-        // Arrange
         Long id = 1L;
         Product product = new Product();
         product.setId(id);
@@ -157,10 +150,8 @@ public class ProductServiceImplTest {
 
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
 
-        // Act
         ProductDTO result = productService.getProductById(id);
 
-        // Assert
         assertNotNull(result);
         assertEquals(id, result.getId());
         assertEquals("Laptop", result.getName());
@@ -170,11 +161,9 @@ public class ProductServiceImplTest {
 
     @Test
     public void testGetProductById_NotFound() {
-        // Arrange
         Long id = 1L;
         when(productRepository.findById(id)).thenReturn(Optional.empty());
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             productService.getProductById(id);
         });
@@ -184,7 +173,6 @@ public class ProductServiceImplTest {
 
     @Test
     public void testUpdateProduct_Success() {
-        // Arrange
         Long id = 1L;
         Product existingProduct = new Product();
         existingProduct.setId(id);
@@ -205,10 +193,8 @@ public class ProductServiceImplTest {
         when(productRepository.findById(id)).thenReturn(Optional.of(existingProduct));
         when(productRepository.save(any(Product.class))).thenReturn(updatedProduct);
 
-        // Act
         ProductDTO result = productService.updateProduct(id, productDTO);
 
-        // Assert
         assertNotNull(result);
         assertEquals(id, result.getId());
         assertEquals("New Laptop", result.getName());
@@ -219,7 +205,6 @@ public class ProductServiceImplTest {
 
     @Test
     public void testUpdateProduct_NotFound() {
-        // Arrange
         Long id = 1L;
         ProductDTO productDTO = new ProductDTO();
         productDTO.setName("New Laptop");
@@ -227,7 +212,6 @@ public class ProductServiceImplTest {
 
         when(productRepository.findById(id)).thenReturn(Optional.empty());
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             productService.updateProduct(id, productDTO);
         });
@@ -238,7 +222,6 @@ public class ProductServiceImplTest {
 
     @Test
     public void testDeleteProduct_Success() {
-        // Arrange
         Long id = 1L;
         Product product = new Product();
         product.setId(id);
@@ -247,28 +230,23 @@ public class ProductServiceImplTest {
         product.setCreatedBy(mockUser);
 
         when(productRepository.findById(id)).thenReturn(Optional.of(product));
-
-        // Act
         productService.deleteProduct(id);
 
-        // Assert
         verify(productRepository, times(1)).findById(id);
         verify(productRepository, times(1)).delete(product);
     }
 
     @Test
     public void testDeleteProduct_NotFound() {
-        // Arrange
         Long id = 1L;
         when(productRepository.findById(id)).thenReturn(Optional.empty());
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             productService.deleteProduct(id);
         });
         assertEquals("Product not found with id: " + id, exception.getMessage());
         verify(productRepository, times(1)).findById(id);
         verify(productRepository, never()).delete(any(Product.class));
-    }*/
+    }
 
 }
