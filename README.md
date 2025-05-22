@@ -6,10 +6,14 @@ Built with the tools and technologies:
 
 
 
+
+
 Spring Boot
 
 
+
 XML
+
 
 
 YAML
@@ -18,10 +22,15 @@ Table of Contents
 
 
 
+
+
 Overview
 
 
+
 Getting Started
+
+
 
 
 
@@ -63,7 +72,7 @@ This project simplifies user management while enhancing security through a power
 
 
 
-🦯 Comprehensive Testing Framework: Ensures reliability and stability through automated tests for all components.
+✅ Comprehensive Testing Framework: Ensures reliability and stability through automated tests for all components.
 
 
 
