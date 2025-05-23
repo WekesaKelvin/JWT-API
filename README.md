@@ -44,7 +44,7 @@ This project requires the following dependencies:
 Build JWT-API from the source and install dependencies:
 
 1. Clone the repository:
-git clone https://github.com/yourusername/JWT-API
+git clone https://github.com/WekesaKelvin/JWT-API---Spring_Boot.git
 
 2. Navigate to the project directory:
 cd JWT-API
